@@ -12,26 +12,24 @@ def main(infile):
 	print(f"start {infile}")
 
 	class ProjectInfo:
-		def __init__(self, index, contributers, projects):
-			self.index = index
+		def __init__(self, contributers, projects):
 			self.contributers = contributers
 			self.projects = projects
 
 		def __repr(self):
 			return self.__str__()
 		def __str__(self):
-			return str(self.index) + ':' + str(self.contributers) + ':' + str(self.projects) 
+			return str(self.contributers) + ':' + str(self.projects) 
 
 	class Contributor:
-		def __init__(self, index, name, skills):
-			self.index = index
+		def __init__(self, name, skills):
 			self.name = name
 			self.skills = skills
 
 		def __repr__(self):
 			return self.__str__()
 		def __str__(self):
-			return str(self.index)
+			return self.name + ':' + str(self.skills)
 
 	class Skill:
 		def __init__(self, name, level):
@@ -41,11 +39,11 @@ def main(infile):
 		def __repr__(self):
 			return self.__str__()
 		def __str__(self):
-			return str(self.index) 
+			return str(self.name) + ':' + str(self.level)
 
 	class Project:
-		def __init__(self, index, name, amountOfDays, score, deadline, rolesRequired):
-			self.index = index
+		def __init__(self, name, amountOfDays, score, deadline, rolesRequired):
+			self.name = name
 			self.amountOfDays = amountOfDays
 			self.score = score
 			self.deadline = deadline
@@ -54,49 +52,7 @@ def main(infile):
 		def __repr__(self):
 			return self.__str__()
 		def __str__(self):
-			return str(self.index) 
-
-	class Street:
-		def __init__(self, index, begin, end, name, time):
-			self.index = index
-			self.begin = begin
-			self.end = end
-			self.name = name
-			self.time = time
-			self.startCars = []
-			self.cars = []
-
-		def __repr__(self):
-			return self.__str__()
-		def __str__(self):
-			return str(self.index)
-
-
-	class Car:
-		def __init__(self, index, path, timeRemaining, startDelay):
-			self.index = index
-			self.path = path
-			self.timeRemaining = timeRemaining
-			self.startDelay = startDelay
-
-		def __repr__(self):
-			return self.__str__()
-		def __str__(self):
-			return str(self.index) + ':' + str(self.timeRemaining) + ':' + str(self.path).replace('[', '{').replace(']', '}')
-
-	
-	class Inter:
-		def __init__(self, index):
-			self.index = index
-			self.ins = []
-			self.outs = []
-			self.schedule = []
-			
-		def __repr__(self):
-			return self.__str__()
-		def __str__(self):
-			return str(self.index) + str(self.schedule).replace('[', '{').replace(']', '}')
-			
+			return str(self.name) + ':' + str(self.amountOfDays) + ':' + str(self.score) + ':' + str(self.deadline) + ':' + str(self.rolesRequired) 
 
 
 
@@ -106,76 +62,53 @@ def main(infile):
 		infoLine = inf.readline().rstrip("\n")
 		info = infoLine.split(" ")
 
-		maxTime = int(info[0])
-		numInters = int(info[1])
-		numStreets = int(info[2])
-		numCars = int(info[3])
-		bonusScore = int(info[4])
+		numContrib = int(info[0])
+		numProj = int(info[1])
 
+		allContrib = []
+		for contribI in range(numContrib):
+			contribLine = inf.readline().rstrip("\n")
+			contribInfo = contribLine.split(" ")
+			name = contribInfo[0]
+			numSkills = int(contribInfo[1])
+			skills = []
+			for skillI in range(numSkills):
+				skillLine = inf.readline().rstrip("\n")
+				skillInfo = skillLine.split(" ")
+				skills.append(Skill(skillInfo[0], int(skillInfo[1])))
 
-		allInters = []
-		for interI in range(numInters):
-			inter = Inter(interI)
-			allInters.append(inter)
+			contrib = Contributor(contribInfo[0], skills)
+			allContrib.append(contrib)
 
-
-		allStreets = []
-		streetDict = {}
-		for streetI in range(numStreets):
-			streetInfo = inf.readline().rstrip("\n").split(" ")
-			street = Street(streetI, int(streetInfo[0]), int(streetInfo[1]), streetInfo[2], int(streetInfo[3]))
-			allStreets.append(street)
-			streetDict[street.name] = street
+		allProj = []
+		for projI in range(numProj):
+			projLine = inf.readline().rstrip("\n")
+			projInfo = projLine.split(" ")
+			name = projInfo[0]
+			amountOfDays = int(projInfo[1])
+			score = int(projInfo[2])
+			deadline = int(projInfo[3])
+			numRoles = int(projInfo[4])
+			roles = []
+			for roleI in range(numRoles):
+				skillLine = inf.readline().rstrip("\n")
+				skillInfo = skillLine.split(" ")
+				roles.append(Skill(skillInfo[0], int(skillInfo[1])))
 			
-			allInters[street.begin].outs.append(street)
-			allInters[street.end].ins.append(street)
+			proj = Project(name, amountOfDays, score, deadline, tuple(roles))
+			allProj.append(proj)
 
-
-		allCars = []
-		for carI in range(numCars):
-			carInfo = inf.readline().rstrip("\n").split(" ")
-			path = []
-			
-			for i in range(1, len(carInfo)):
-				street = streetDict[carInfo[i]]
-				path.append(street)
-				
-			startDelay = len(path[0].startCars)
-			timeRemaining = maxTime - startDelay
-
-			for streetI in range(1, len(path)):
-				street = path[streetI]
-				timeRemaining -= street.time
-				
-			car = Car(carI, path, timeRemaining, startDelay)
-			path[0].startCars.append(car)
-			allCars.append(car)
+	print(allContrib)
+	print(allProj)
 
 
 
-
-
-
-	for car in allCars:
-		currTime = car.startDelay
-		for street in car.path:
-			currTime += street.time
 		
-
-			street.cars.append((currTime, car))
-
-
-	for inter in allInters:
-		inter.ins = sorted(inter.ins, key=lambda s: -len(s.startCars))
-		inter.totalCars = 0
-		for s in inter.ins:
-			inter.totalCars += len(street.cars)
-		
-		CYCLETIME = 3
-		for s in inter.ins:
-			onTime = min(math.ceil(len(s.cars) * CYCLETIME / inter.totalCars), maxTime)
-			if onTime > 0:
-				inter.schedule.append((s.index, onTime))
+	# 	CYCLETIME = 3
+	# 	for s in inter.ins:
+	# 		onTime = min(math.ceil(len(s.cars) * CYCLETIME / inter.totalCars), maxTime)
+	# 		if onTime > 0:
+	# 			inter.schedule.append((s.index, onTime))
 
 
 
@@ -186,25 +119,25 @@ def main(infile):
 
 
 	
-	with open("out" + infile, "w") as txt_file:
-		outInt = tuple(filter(lambda i: len(i.schedule) > 0, allInters))
-		txt_file.write(str(len(outInt)))
-		for inter in outInt:
-			txt_file.write(f"\n{inter.index}")
-			txt_file.write(f"\n{len(inter.schedule)}")
-			for step in inter.schedule:
-				txt_file.write(f"\n{allStreets[step[0]].name} {step[1]}")
+	# with open("out" + infile, "w") as txt_file:
+	# 	outInt = tuple(filter(lambda i: len(i.schedule) > 0, allInters))
+	# 	txt_file.write(str(len(outInt)))
+	# 	for inter in outInt:
+	# 		txt_file.write(f"\n{inter.index}")
+	# 		txt_file.write(f"\n{len(inter.schedule)}")
+	# 		for step in inter.schedule:
+	# 			txt_file.write(f"\n{allStreets[step[0]].name} {step[1]}")
 
 
-	print(f"done {infile}")
+	# print(f"done {infile}")
 
 
 
 
 if __name__ == "__main__":
 	main("a.txt")
-	main("b.txt")
-	main("c.txt")
-	main("d.txt")
-	main("e.txt")
-	main("f.txt")
+	# main("b.txt")
+	# main("c.txt")
+	# main("d.txt")
+	# main("e.txt")
+	# main("f.txt")
