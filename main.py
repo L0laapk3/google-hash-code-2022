@@ -42,17 +42,13 @@ def main(infile):
 			self.skillsReq = skillsReq
 			self.startDay = -1
 			self.contribs = [None] * len(skillsReq)
-			self.duration = 0
-			self.realScore = 0
 
-		def eval(self):
-			
 			
 
 		def __repr__(self):
 			return self.__str__()
 		def __str__(self):
-			return str(self.name) + ':' + str(self.duration) + ':' + str(self.score) + ':' + str(self.deadline) + ':' + str(self.skillsReq) 
+			return str(self.name) + ':' + str(self.bestBefore) + ':' + str(self.maxScore) + ':' + str(self.deadline) + ':' + str(self.skillsReq) 
 
 
 
@@ -100,6 +96,8 @@ def main(infile):
 
 	print(allContrib)
 	print(allProj)
+
+
 
 
 
