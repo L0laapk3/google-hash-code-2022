@@ -107,13 +107,16 @@ def main(infile):
 	def fillDay(day):
 		random.shuffle(allProj)
 		for proj in allProj:
+			if proj.startDay != -1: # project booked
+				break
 			random.shuffle(allContrib)
 			unfilledSkills = list(proj.skillsReq)
 			unfilledCount = len(unfilledSkills)
 			for contrib in allContrib:
-				if proj.startDay != -1: # project booked
-					break
 				# todo: check if person is busy
+				for busy in contrib.busy:
+					if busy[0] <= day and day < busy[0] + busy[1]:
+						break
 				usedContrib = False
 				for skillReqI in range(len(unfilledSkills)):
 					skillReq = proj.skillsReq[skillReqI]
@@ -121,7 +124,6 @@ def main(infile):
 						for skill in contrib.skills:
 							if skillReq.name == skill.name and skillReq.level <= skill.level:
 								proj.contribs[skillReqI] = contrib
-								contrib.busy.append((day, proj.bestBefore))
 								unfilledSkills[skillReqI] = None
 								usedContrib = True
 								unfilledCount -= 1
@@ -130,6 +132,15 @@ def main(infile):
 								break
 					if usedContrib:
 						break
+				if proj.startDay != -1: # project booked now
+					for contribI in range(len(proj.contribs)):
+						contrib = proj.contribs[contribI]
+						contrib.busy.append((day, proj.duration))
+						for skill in contrib.skills:
+							if skill.name == proj.skillsReq[contribI].name and skill.level <= proj.skillsReq[contribI].level:
+								skill.level += 1
+
+					break
 				
 
 
