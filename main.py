@@ -2,6 +2,7 @@ import sys
 import itertools
 import multiprocessing as mp
 import math
+import random
 
 
 
@@ -34,20 +35,23 @@ def main(infile):
 			return str(self.name) + ':' + str(self.level)
 
 	class Proj:
-		def __init__(self, name, bestBefore, maxScore, deadline, skillsReq):
+		def __init__(self, name, duration, maxScore, bestBefore, skillsReq):
 			self.name = name
-			self.bestBefore = bestBefore
+			self.duration = duration
 			self.maxScore = maxScore
-			self.deadline = deadline
+			self.bestBefore = bestBefore
 			self.skillsReq = skillsReq
+			self.reset()
+
+		def reset(self):
 			self.startDay = -1
-			self.contribs = [None] * len(skillsReq)
+			self.contribs = [None] * len(self.skillsReq)
 
 			
 		def __repr__(self):
 			return self.__str__()
 		def __str__(self):
-			return str(self.name) + ':' + str(self.bestBefore) + ':' + str(self.maxScore) + ':' + str(self.deadline) + ':' + str(self.skillsReq) 
+			return str(self.name) + ':' + str(self.duration) + ':' + str(self.maxScore) + ':' + str(self.bestBefore) + ':' + str(self.skillsReq) 
 
 
 
@@ -99,23 +103,49 @@ def main(infile):
 	print(allProj)
 
 
+	# ## random
+	# def fillDay(day):
+	# 	random.shuffle(allProj)
+	# 	for proj in allProj:
+	# 		random.shuffle(allContrib)
+	# 		unfilledSkills = proj.skillsReq[:]
+	# 		unfilledCount = len(unfilledSkills)
+	# 		for contrib in allContrib:
+	# 			usedContrib = False
+	# 			for skillReqI in range(len(unfilledSkills)):
+	# 				skillReq = proj.skillsReq[skillReqI]
+	# 				if skillReq is not None:
+	# 					for skill in contrib.skills:
+	# 						if skillReq.name == skill.name and skillReq.level <= skill.level:
+	# 							proj.contribs[skillReqI] = contrib
+	# 							contrib.busy.append((day, proj.bestBefore))
+	# 							unfilledSkills[skillReqI] = None
+	# 							usedContrib = True
+	# 							unfilledCount -= 1
+	# 							if unfilledCount == 0:
+	# 								proj.startDay = day
+	# 							break
+	# 				if usedContrib:
+	# 					break
+				
 
-	# day = 0
-	# while day < lastDay:
+
+
+	# for day in range(lastDay):
+	# 	fillDay(day)
 
 
 
+	# allProj[1].startDay = 0
+	# allProj[1].contribs[1] = allContrib[0]
+	# allProj[1].contribs[0] = allContrib[1]
 
-	allProj[1].startDay = 0
-	allProj[1].contribs[1] = allContrib[0]
-	allProj[1].contribs[0] = allContrib[1]
+	# allProj[0].startDay = 7
+	# allProj[0].contribs[0] = allContrib[0]
 
-	allProj[0].startDay = 7
-	allProj[0].contribs[0] = allContrib[0]
-
-	allProj[2].startDay = 7
-	allProj[2].contribs[0] = allContrib[2]
-	allProj[2].contribs[1] = allContrib[1]
+	# allProj[2].startDay = 7
+	# allProj[2].contribs[0] = allContrib[2]
+	# allProj[2].contribs[1] = allContrib[1]
 
 
 
