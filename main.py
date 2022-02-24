@@ -16,6 +16,7 @@ def main(infile):
 		def __init__(self, name, skills):
 			self.name = name
 			self.skills = skills
+			self.busy = [] # (startday, duration)
 
 		def __repr__(self):
 			return self.__str__()
@@ -33,14 +34,20 @@ def main(infile):
 			return str(self.name) + ':' + str(self.level)
 
 	class Proj:
-		def __init__(self, name, duration, score, deadline, skillsReq):
+		def __init__(self, name, bestBefore, maxScore, deadline, skillsReq):
 			self.name = name
-			self.duration = duration
-			self.score = score
+			self.bestBefore = bestBefore
+			self.maxScore = maxScore
 			self.deadline = deadline
 			self.skillsReq = skillsReq
 			self.startDay = -1
 			self.contribs = [None] * len(skillsReq)
+			self.duration = 0
+			self.realScore = 0
+
+		def eval(self):
+			
+			
 
 		def __repr__(self):
 			return self.__str__()
