@@ -56,48 +56,6 @@ def main(infile):
 		def __str__(self):
 			return str(self.index) 
 
-	class Street:
-		def __init__(self, index, begin, end, name, time):
-			self.index = index
-			self.begin = begin
-			self.end = end
-			self.name = name
-			self.time = time
-			self.startCars = []
-			self.cars = []
-
-		def __repr__(self):
-			return self.__str__()
-		def __str__(self):
-			return str(self.index)
-
-
-	class Car:
-		def __init__(self, index, path, timeRemaining, startDelay):
-			self.index = index
-			self.path = path
-			self.timeRemaining = timeRemaining
-			self.startDelay = startDelay
-
-		def __repr__(self):
-			return self.__str__()
-		def __str__(self):
-			return str(self.index) + ':' + str(self.timeRemaining) + ':' + str(self.path).replace('[', '{').replace(']', '}')
-
-	
-	class Inter:
-		def __init__(self, index):
-			self.index = index
-			self.ins = []
-			self.outs = []
-			self.schedule = []
-			
-		def __repr__(self):
-			return self.__str__()
-		def __str__(self):
-			return str(self.index) + str(self.schedule).replace('[', '{').replace(']', '}')
-			
-
 
 
 
