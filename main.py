@@ -46,7 +46,21 @@ def main(infile):
 			return self.__str__()
 		def __str__(self):
 			return str(self.name) + ':' + str(self.duration) + ':' + str(self.score) + ':' + str(self.deadline) + ':' + str(self.skillsReq) 
+		def isValid(self):
+			isValid = True
+			allSkills = []
+			for contrib in contribs:
+				allSkills + contrib.skills
 
+			for reqSkill in self.skillsReq:
+				foundSkill = list(filter(lambda x: reqSkill in x, allSkills))
+				if foundSkill.len() == 0:
+					isValid = False
+				else:
+					if (foundSkill[0].level != reqSkill.level):
+						isValid = False
+
+			return isValid
 
 
 
