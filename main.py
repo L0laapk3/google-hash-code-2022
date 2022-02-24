@@ -42,11 +42,7 @@ def main(infile):
 			self.skillsReq = skillsReq
 			self.startDay = -1
 			self.contribs = [None] * len(skillsReq)
-			self.duration = 0
-			self.realScore = 0
 
-		def eval(self):
-			
 			
 
 		def __repr__(self):
@@ -68,7 +64,6 @@ def main(infile):
 						isValid = False
 
 			return isValid
-
 
 
 	with open("in/" + infile, 'r') as inf:
@@ -114,6 +109,8 @@ def main(infile):
 
 	print(allContrib)
 	print(allProj)
+
+
 
 
 
