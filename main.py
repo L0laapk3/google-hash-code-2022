@@ -11,6 +11,17 @@ def main(infile):
 
 	print(f"start {infile}")
 
+	class ProjectInfo:
+		def __init__(self, index, contributers, projects):
+			self.index = index
+			self.contributers = contributers
+			self.projects = projects
+
+		def __repr(self):
+			return self.__str__()
+		def __str__(self):
+			return str(self.index) + ':' + str(self.contributers) + ':' + str(self.projects) 
+
 	class Street:
 		def __init__(self, index, begin, end, name, time):
 			self.index = index
