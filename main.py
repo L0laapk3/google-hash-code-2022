@@ -44,26 +44,12 @@ def main(infile):
 			self.contribs = [None] * len(skillsReq)
 
 			
-
 		def __repr__(self):
 			return self.__str__()
 		def __str__(self):
-			return str(self.name) + ':' + str(self.duration) + ':' + str(self.score) + ':' + str(self.deadline) + ':' + str(self.skillsReq) 
-		def isValid(self):
-			isValid = True
-			allSkills = []
-			for contrib in contribs:
-				allSkills + contrib.skills
+			return str(self.name) + ':' + str(self.bestBefore) + ':' + str(self.maxScore) + ':' + str(self.deadline) + ':' + str(self.skillsReq) 
 
-			for reqSkill in self.skillsReq:
-				foundSkill = list(filter(lambda x: reqSkill in x, allSkills))
-				if foundSkill.len() == 0:
-					isValid = False
-				else:
-					if (foundSkill[0].level != reqSkill.level):
-						isValid = False
 
-			return isValid
 
 
 	with open("in/" + infile, 'r') as inf:
@@ -89,12 +75,13 @@ def main(infile):
 			contrib = Contrib(contribInfo[0], skills)
 			allContrib.append(contrib)
 
+		lastDay = 0
 		allProj = []
 		for projI in range(numProj):
 			projLine = inf.readline().rstrip("\n")
 			projInfo = projLine.split(" ")
 			name = projInfo[0]
-			amountOfDays = int(projInfo[1])
+			bestBefore = int(projInfo[1])
 			score = int(projInfo[2])
 			deadline = int(projInfo[3])
 			numRoles = int(projInfo[4])
@@ -103,13 +90,18 @@ def main(infile):
 				skillLine = inf.readline().rstrip("\n")
 				skillInfo = skillLine.split(" ")
 				roles.append(Skill(skillInfo[0], int(skillInfo[1])))
-			
-			proj = Proj(name, amountOfDays, score, deadline, tuple(roles))
+
+			lastDay = max(lastDay, deadline + bestBefore)			
+			proj = Proj(name, bestBefore, score, deadline, tuple(roles))
 			allProj.append(proj)
 
 	print(allContrib)
 	print(allProj)
 
+
+
+	# day = 0
+	# while day < lastDay:
 
 
 
