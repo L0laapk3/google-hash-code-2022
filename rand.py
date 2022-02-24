@@ -17,12 +17,12 @@ def main(infile):
 		def __init__(self, name, skills):
 			self.name = name
 			self.skills = skills
-			self.busy = [] # (startday, duration)
+			self.busy = [] # (startday, endDay)
 
 		def __repr__(self):
 			return self.__str__()
 		def __str__(self):
-			return self.name + ':' + str(self.skills)
+			return self.name + ':' + str(self.skills) + ':' + str(self.busy)
 
 	class Skill:
 		def __init__(self, name, level):
@@ -99,8 +99,8 @@ def main(infile):
 			proj = Proj(name, bestBefore, score, deadline, tuple(roles))
 			allProj.append(proj)
 
-	print(allContrib)
-	print(allProj)
+	# print(allContrib)
+	# print(allProj)
 
 
 	## random
@@ -115,9 +115,13 @@ def main(infile):
 			# print(unfilledCount)
 			for contrib in allContrib:
 				# todo: check if person is busy
+				isBusy = False
 				for busy in contrib.busy:
-					if busy[0] <= day and day < busy[0] + busy[1]:
+					if busy[0] <= day and day < busy[1]:
+						isBusy = True
 						break
+				if isBusy:
+					break
 				usedContrib = False
 				for skillReqI in range(len(unfilledSkills)):
 					skillReq = unfilledSkills[skillReqI]
@@ -137,7 +141,7 @@ def main(infile):
 				if proj.startDay != -1: # project booked now
 					for contribI in range(len(proj.contribs)):
 						contrib = proj.contribs[contribI]
-						contrib.busy.append((day, proj.duration))
+						contrib.busy.append((day, day + proj.duration))
 						for skill in contrib.skills:
 							if skill.name == proj.skillsReq[contribI].name and skill.level <= proj.skillsReq[contribI].level:
 								skill.level += 1
@@ -164,6 +168,7 @@ def main(infile):
 	# allProj[2].contribs[1] = allContrib[1]
 
 
+	# print(allContrib)
 
 	
 	with open("out" + infile, "w") as txt_file:
@@ -188,9 +193,9 @@ def main(infile):
 
 
 if __name__ == "__main__":
-	# main("a.txt")
+	main("a.txt")
 	main("b.txt")
-	# main("c.txt")
+	main("c.txt")
 	# main("d.txt")
 	# main("e.txt")
 	# main("f.txt")
