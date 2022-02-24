@@ -35,7 +35,6 @@ def main(infile):
 
 	class Skill:
 		def __init__(self, name, level):
-			self.index = index
 			self.name = name
 			self.level = level
 
@@ -45,7 +44,7 @@ def main(infile):
 			return str(self.index) 
 
 	class Project:
-		def __init__(self, name, amountOfDays, score, deadline, rolesRequired):
+		def __init__(self, index, name, amountOfDays, score, deadline, rolesRequired):
 			self.index = index
 			self.amountOfDays = amountOfDays
 			self.score = score
