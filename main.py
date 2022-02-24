@@ -11,17 +11,8 @@ def main(infile):
 
 	print(f"start {infile}")
 
-	class ProjectInfo:
-		def __init__(self, contributers, projects):
-			self.contributers = contributers
-			self.projects = projects
 
-		def __repr(self):
-			return self.__str__()
-		def __str__(self):
-			return str(self.contributers) + ':' + str(self.projects) 
-
-	class Contributor:
+	class Contrib:
 		def __init__(self, name, skills):
 			self.name = name
 			self.skills = skills
@@ -41,18 +32,20 @@ def main(infile):
 		def __str__(self):
 			return str(self.name) + ':' + str(self.level)
 
-	class Project:
-		def __init__(self, name, amountOfDays, score, deadline, rolesRequired):
+	class Proj:
+		def __init__(self, name, duration, score, deadline, skillsReq):
 			self.name = name
-			self.amountOfDays = amountOfDays
+			self.duration = duration
 			self.score = score
 			self.deadline = deadline
-			self.rolesRequired = rolesRequired
+			self.skillsReq = skillsReq
+			self.startDay = -1
+			self.contribs = []
 
 		def __repr__(self):
 			return self.__str__()
 		def __str__(self):
-			return str(self.name) + ':' + str(self.amountOfDays) + ':' + str(self.score) + ':' + str(self.deadline) + ':' + str(self.rolesRequired) 
+			return str(self.name) + ':' + str(self.duration) + ':' + str(self.score) + ':' + str(self.deadline) + ':' + str(self.skillsReq) 
 
 
 
@@ -77,7 +70,7 @@ def main(infile):
 				skillInfo = skillLine.split(" ")
 				skills.append(Skill(skillInfo[0], int(skillInfo[1])))
 
-			contrib = Contributor(contribInfo[0], skills)
+			contrib = Contrib(contribInfo[0], skills)
 			allContrib.append(contrib)
 
 		allProj = []
@@ -95,7 +88,7 @@ def main(infile):
 				skillInfo = skillLine.split(" ")
 				roles.append(Skill(skillInfo[0], int(skillInfo[1])))
 			
-			proj = Project(name, amountOfDays, score, deadline, tuple(roles))
+			proj = Proj(name, amountOfDays, score, deadline, tuple(roles))
 			allProj.append(proj)
 
 	print(allContrib)
@@ -103,33 +96,31 @@ def main(infile):
 
 
 
-		
-	# 	CYCLETIME = 3
-	# 	for s in inter.ins:
-	# 		onTime = min(math.ceil(len(s.cars) * CYCLETIME / inter.totalCars), maxTime)
-	# 		if onTime > 0:
-	# 			inter.schedule.append((s.index, onTime))
-
-
-
-	
-
+	allProj[1].startDay = 0
+	allProj[1].contribs.append(allContrib[2])
+	allProj[1].contribs.append(allContrib[1])
 
 
 
 
 	
-	# with open("out" + infile, "w") as txt_file:
-	# 	outInt = tuple(filter(lambda i: len(i.schedule) > 0, allInters))
-	# 	txt_file.write(str(len(outInt)))
-	# 	for inter in outInt:
-	# 		txt_file.write(f"\n{inter.index}")
-	# 		txt_file.write(f"\n{len(inter.schedule)}")
-	# 		for step in inter.schedule:
-	# 			txt_file.write(f"\n{allStreets[step[0]].name} {step[1]}")
+	with open("out" + infile, "w") as txt_file:
+		plannedProj = []
+		for proj in allProj:
+			if proj.startDay != -1:
+				plannedProj.append(proj)
+				
+		outProj = list(filter(lambda p: p.startDay != -1, allProj))
+		sorted(outProj, key=lambda p: p.startDay)
+		txt_file.write(f"{str(len(outProj))}\n")
+		for proj in outProj:
+			txt_file.write(f"{proj.name}\n")
+			contribNames = []
+			for contrib in proj.contribs:
+				contribNames.append(contrib.name)
+			txt_file.write(f"{' '.join(contribNames)}\n")
 
-
-	# print(f"done {infile}")
+	print(f"done {infile}")
 
 
 
