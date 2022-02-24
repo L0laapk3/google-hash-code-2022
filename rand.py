@@ -55,7 +55,6 @@ def main(infile):
 
 
 
-
 	with open("in/" + infile, 'r') as inf:
 
 		infoLine = inf.readline().rstrip("\n")
@@ -85,9 +84,9 @@ def main(infile):
 			projLine = inf.readline().rstrip("\n")
 			projInfo = projLine.split(" ")
 			name = projInfo[0]
-			bestBefore = int(projInfo[1])
+			duration = int(projInfo[1])
 			score = int(projInfo[2])
-			deadline = int(projInfo[3])
+			bestBefore = int(projInfo[3])
 			numRoles = int(projInfo[4])
 			roles = []
 			for roleI in range(numRoles):
@@ -95,8 +94,8 @@ def main(infile):
 				skillInfo = skillLine.split(" ")
 				roles.append(Skill(skillInfo[0], int(skillInfo[1])))
 
-			lastDay = max(lastDay, deadline + bestBefore)			
-			proj = Proj(name, bestBefore, score, deadline, tuple(roles))
+			lastDay = max(lastDay, bestBefore + duration)			
+			proj = Proj(name, duration, score, bestBefore, tuple(roles))
 			allProj.append(proj)
 
 	# print(allContrib)
@@ -145,7 +144,6 @@ def main(infile):
 						for skill in contrib.skills:
 							if skill.name == proj.skillsReq[contribI].name and skill.level <= proj.skillsReq[contribI].level:
 								skill.level += 1
-
 					break
 				
 
@@ -155,6 +153,17 @@ def main(infile):
 		fillDay(day)
 
 
+
+
+	def getTotalScore():
+		score = 0
+		for proj in allProj:
+			if proj.startDay != -1:
+				score += max(proj.maxScore - max(proj.startDay + proj.duration - proj.bestBefore, 0), 0)
+		return score
+
+	print(getTotalScore())
+	
 
 	# allProj[1].startDay = 0
 	# allProj[1].contribs[1] = allContrib[0]
@@ -195,7 +204,7 @@ def main(infile):
 if __name__ == "__main__":
 	main("a.txt")
 	main("b.txt")
-	main("c.txt")
+	# main("c.txt")
 	# main("d.txt")
 	# main("e.txt")
 	# main("f.txt")
