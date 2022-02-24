@@ -22,6 +22,17 @@ def main(infile):
 		def __str__(self):
 			return str(self.index) + ':' + str(self.contributers) + ':' + str(self.projects) 
 
+	class Contributor:
+		def __init__(self, index, name, skills):
+			self.index = index
+			self.name = name
+			self.skills = skills
+
+		def __repr__(self):
+			return self.__str__()
+		def __str__(self):
+			return str(self.index)
+
 	class Street:
 		def __init__(self, index, begin, end, name, time):
 			self.index = index
