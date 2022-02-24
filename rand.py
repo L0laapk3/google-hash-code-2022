@@ -112,6 +112,7 @@ def main(infile):
 			random.shuffle(allContrib)
 			unfilledSkills = list(proj.skillsReq)
 			unfilledCount = len(unfilledSkills)
+			# print(unfilledCount)
 			for contrib in allContrib:
 				# todo: check if person is busy
 				for busy in contrib.busy:
@@ -119,10 +120,11 @@ def main(infile):
 						break
 				usedContrib = False
 				for skillReqI in range(len(unfilledSkills)):
-					skillReq = proj.skillsReq[skillReqI]
+					skillReq = unfilledSkills[skillReqI]
 					if skillReq is not None:
 						for skill in contrib.skills:
 							if skillReq.name == skill.name and skillReq.level <= skill.level:
+								# print(skillReq)
 								proj.contribs[skillReqI] = contrib
 								unfilledSkills[skillReqI] = None
 								usedContrib = True
@@ -186,8 +188,8 @@ def main(infile):
 
 
 if __name__ == "__main__":
-	main("a.txt")
-	# main("b.txt")
+	# main("a.txt")
+	main("b.txt")
 	# main("c.txt")
 	# main("d.txt")
 	# main("e.txt")
