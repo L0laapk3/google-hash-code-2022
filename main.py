@@ -48,7 +48,62 @@ def main(infile):
 			return self.__str__()
 		def __str__(self):
 			return str(self.name) + ':' + str(self.bestBefore) + ':' + str(self.maxScore) + ':' + str(self.deadline) + ':' + str(self.skillsReq) 
+		def isValid(self):
+			# isValid = True
+			# skillDict = {}
+			# for contrib in self.contribs:
+			# 	for skill in contrib.skills:
+			# 		skillDict[skill.name] = skill.level
 
+			# reqSkillDict = {}
+			# for reqSkill in self.skillsReq:
+			# 	reqSkillDict[reqSkill.name] = reqSkill.level
+
+			# print(skillDict)
+			# print(reqSkillDict)
+
+			
+
+			# for reqSkill in reqSkillDict:
+			# 	if reqSkill in skillDict.keys():
+			# 		if (reqSkillDict[reqSkill] <= skillDict.get(reqSkill)):
+			# 			isValid = True
+			# 	else:
+			# 		return False
+
+			# return isValid
+
+			isValid = True
+			
+			reqSkillDict = {}
+			for reqSkill in self.skillsReq:
+				reqSkillDict[reqSkill.name] = reqSkill.level
+			
+			for index, key in enumerate(reqSkillDict):
+				
+				contribSkillDict = {}
+				for skill in self.contribs[index].skills:
+					contribSkillDict[skill.name] = skill.level
+
+				if (key in contribSkillDict.keys()):
+					if (reqSkillDict[key] <= skill.level):
+						isValid = True
+					elif reqSkillDict[key] == (skill.level) - 1:
+						isValid = False
+						for contrib in self.contribs:
+							contribSkillDict1 = {}
+							for skill in self.contribs[index].skills:
+								contribSkillDict1[skill.name] = skill.level
+								if (reqSkillDict[key] <= skill.level):
+									isValid = True
+					else:
+						return False
+			
+			return isValid
+				
+				
+
+			
 
 
 
@@ -112,10 +167,15 @@ def main(infile):
 
 	allProj[0].startDay = 7
 	allProj[0].contribs[0] = allContrib[0]
+	allProj[0].contribs[1] = allContrib[1]
 
 	allProj[2].startDay = 7
 	allProj[2].contribs[0] = allContrib[2]
 	allProj[2].contribs[1] = allContrib[1]
+
+	print(allProj[0].isValid())
+	print(allProj[1].isValid())
+	print(allProj[2].isValid())
 
 
 
