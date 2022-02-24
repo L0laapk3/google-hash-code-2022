@@ -44,6 +44,19 @@ def main(infile):
 		def __str__(self):
 			return str(self.index) 
 
+	class Project:
+		def __init__(self, name, amountOfDays, score, deadline, rolesRequired):
+			self.index = index
+			self.amountOfDays = amountOfDays
+			self.score = score
+			self.deadline = deadline
+			self.rolesRequired = rolesRequired
+
+		def __repr__(self):
+			return self.__str__()
+		def __str__(self):
+			return str(self.index) 
+
 	class Street:
 		def __init__(self, index, begin, end, name, time):
 			self.index = index
