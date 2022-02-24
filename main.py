@@ -40,7 +40,7 @@ def main(infile):
 			self.deadline = deadline
 			self.skillsReq = skillsReq
 			self.startDay = -1
-			self.contribs = []
+			self.contribs = [None] * len(skillsReq)
 
 		def __repr__(self):
 			return self.__str__()
@@ -97,9 +97,15 @@ def main(infile):
 
 
 	allProj[1].startDay = 0
-	allProj[1].contribs.append(allContrib[2])
-	allProj[1].contribs.append(allContrib[1])
+	allProj[1].contribs[1] = allContrib[0]
+	allProj[1].contribs[0] = allContrib[1]
 
+	allProj[0].startDay = 7
+	allProj[0].contribs[0] = allContrib[0]
+
+	allProj[2].startDay = 7
+	allProj[2].contribs[0] = allContrib[2]
+	allProj[2].contribs[1] = allContrib[1]
 
 
 
@@ -111,7 +117,7 @@ def main(infile):
 				plannedProj.append(proj)
 				
 		outProj = list(filter(lambda p: p.startDay != -1, allProj))
-		sorted(outProj, key=lambda p: p.startDay)
+		outProj = sorted(outProj, key=lambda p: p.startDay)
 		txt_file.write(f"{str(len(outProj))}\n")
 		for proj in outProj:
 			txt_file.write(f"{proj.name}\n")
