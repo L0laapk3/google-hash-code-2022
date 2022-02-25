@@ -45,13 +45,13 @@ def main(infile):
 
 		def reset(self):
 			self.startDay = -1
-			self.contribs = [None] * len(self.skillsReq)
+			self.contribs = []
 
 			
 		def __repr__(self):
 			return self.__str__()
 		def __str__(self):
-			return str(self.name) + ':' + str(self.duration) + ':' + str(self.maxScore) + ':' + str(self.bestBefore) + ':' + str(self.skillsReq) 
+			return str(self.name) + ':' + str(self.duration) + ':' + str(self.maxScore) + ':' + str(self.bestBefore) + ':' + str(self.skillsReq) + ':' + str(self.contribs)
 
 
 
@@ -99,9 +99,6 @@ def main(infile):
 			proj = Proj(name, bestBefore, score, deadline, tuple(roles))
 			allProj.append(proj)
 
-	print(allContrib)
-	print(allProj)
-
 
 	# ## random
 	# def fillDay(day):
@@ -130,6 +127,49 @@ def main(infile):
 				
 
 
+	def get_available(name, level, start, end, cand):
+		best = False
+		lowest_skillscore = 10000000000000
+		for contrib in allContrib:
+			if not contrib in cand:
+				if not any([start < b < end for b in contrib.busy]):
+					skill_score = sum([s.level for s in contrib.skills])
+					for skill in contrib.skills:
+						if skill.name == name and skill.level >= level:
+							if not best or best[2] >= skill.level and skill_score<lowest_skillscore:
+								best = (contrib,skill,level)
+		return best
+
+	#first deadline
+	ps = [(proj, proj.bestBefore) for proj in allProj]
+	ps.sort(key=lambda tup: tup[1])
+
+	for (proj,_) in ps:
+		start = proj.bestBefore - proj.duration
+		end = proj.duration
+		candidates = []
+		skills_to_upgrade = []
+		wrong = False
+		for s in proj.skillsReq:
+			temp = get_available(s.name, s.level, start, end, candidates)
+			if temp:
+				(c,s,l) = temp
+				if s.level == l:
+					skills_to_upgrade.append(s)
+				candidates.append(c)
+			else:
+				wrong = True
+		if not wrong:
+			proj.startDate = end
+			proj.contribs = candidates
+			[cand.busy + list(range(start, end)) for cand in candidates]
+			for s in skills_to_upgrade:
+				s.level += 1
+
+
+		# level up
+
+	print("-----")
 
 	# for day in range(lastDay):
 	# 	fillDay(day)
@@ -150,13 +190,15 @@ def main(infile):
 
 
 	
-	with open("out" + infile, "w") as txt_file:
+	with open("outsd" + infile, "w") as txt_file:
 		plannedProj = []
 		for proj in allProj:
-			if proj.startDay != -1:
+			if len(proj.contribs) > 0:
 				plannedProj.append(proj)
 				
-		outProj = list(filter(lambda p: p.startDay != -1, allProj))
+		# outProj = list(filter(lambda p: p.startDay != -1, allProj))
+		# outProj = sorted(outProj, key=lambda p: p.startDay)
+		outProj = [proj for proj in allProj if len(proj.contribs) > 0]
 		outProj = sorted(outProj, key=lambda p: p.startDay)
 		txt_file.write(f"{str(len(outProj))}\n")
 		for proj in outProj:
@@ -172,9 +214,9 @@ def main(infile):
 
 
 if __name__ == "__main__":
-	main("a.txt")
+	# main("a.txt")
 	# main("b.txt")
-	# main("c.txt")
-	# main("d.txt")
-	# main("e.txt")
-	# main("f.txt")
+	main("c.txt")
+	main("d.txt")
+	main("e.txt")
+	main("f.txt")
