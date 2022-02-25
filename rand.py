@@ -110,6 +110,7 @@ def main(infile):
 
 
 		## random
+		allProj = sorted(allProj, key=lambda x: x.maxScore, reverse=True)
 		def fillDay(day):
 			random.shuffle(allProj)
 			for proj in allProj:
@@ -156,8 +157,28 @@ def main(infile):
 
 
 
-		for day in range(lastDay):
+		for day in range(0, lastDay, 100):
 			fillDay(day)
+			if day % 100 == 0 and day > 0:
+						
+				with open("outkak5" + infile, "w") as txt_file:
+					plannedProj = []
+					for proj in allProj:
+						if proj.startDay != -1:
+							plannedProj.append(proj)
+							
+					outProj = list(filter(lambda p: p.startDay != -1, allProj))
+					outProj = sorted(outProj, key=lambda p: p.startDay)
+					txt_file.write(f"{str(len(outProj))}\n")
+					for proj in outProj:
+						txt_file.write(f"{proj.name}\n")
+						contribNames = []
+						for contrib in proj.contribs:
+							contribNames.append(contrib.name)
+						txt_file.write(f"{' '.join(contribNames)}\n")
+
+				print(f"done {infile} {day}")
+
 
 
 
@@ -191,7 +212,7 @@ def main(infile):
 		# print(allContrib)
 
 		
-		with open("out" + infile, "w") as txt_file:
+		with open("outkak2" + infile, "w") as txt_file:
 			plannedProj = []
 			for proj in allProj:
 				if proj.startDay != -1:
@@ -214,8 +235,8 @@ def main(infile):
 
 if __name__ == "__main__":
 	# main("a.txt")
-	main("b.txt")
+	# main("b.txt")
 	# main("c.txt")
 	# main("d.txt")
 	# main("e.txt")
-	# main("f.txt")
+	main("f.txt")
